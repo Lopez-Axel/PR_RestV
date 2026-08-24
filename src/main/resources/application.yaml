@@ -1,3 +1,30 @@
 spring:
   application:
     name: demo_pam
+
+  # Envío real de emails (OTP): descomentar y completar para activar SMTP.
+  # Sin esto, el código de verificación se imprime en la consola del server.
+  # mail:
+  #   host: smtp.example.com
+  #   port: 587
+  #   username: usuario
+  #   password: clave
+  #   properties:
+  #     mail.smtp.auth: true
+  #     mail.smtp.starttls.enable: true
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/PR_RestV
+    username: postgres
+    password: "@xelpsql"
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+
+server:
+  port: 8080
