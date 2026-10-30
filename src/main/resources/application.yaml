@@ -1,30 +1,54 @@
 spring:
   application:
     name: demo_pam
-
-  # Envío real de emails (OTP): descomentar y completar para activar SMTP.
-  # Sin esto, el código de verificación se imprime en la consola del server.
-  # mail:
-  #   host: smtp.example.com
-  #   port: 587
-  #   username: usuario
-  #   password: clave
-  #   properties:
-  #     mail.smtp.auth: true
-  #     mail.smtp.starttls.enable: true
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
   datasource:
     url: jdbc:postgresql://localhost:5432/PR_RestV
     username: postgres
     password: "@xelpsql"
-
   jpa:
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
+
+management:
+  endpoint:
+    health:
+      show-details: always
 
 server:
   port: 8080
+app:
+  jwt:
+    secret: "dev-secret-demo-pam-cambiar-en-produccion-0123456789abcdef"
+    access-expiration-ms: 900000000
+    refresh-expiration-ms: 604800000
+    otp-expiration-minutes: 10
+  upload:
+    dir: ${UPLOAD_DIR:./uploads}
+  payment:
+    qr-expiration-minutes: ${QR_EXPIRATION_MINUTES:10}
+    static-qr-image: ${STATIC_QR_IMAGE:./uploads/merchant-qr.png}
+  bank:
+    enabled: ${BANK_ENABLED:false}
+    provider: ${BANK_PROVIDER:mock}
+    base-url: ${BANK_BASE_URL:}
+    access-key: ${BANK_ACCESS_KEY:}
+    secret-key: ${BANK_SECRET_KEY:}
+    merchant-id: ${BANK_MERCHANT_ID:}
+    callback-secret: ${BANK_CALLBACK_SECRET:}
+    callback-url: ${BANK_CALLBACK_URL:http://localhost:8080/api/bank/callback}
+  stock-alerts:
+    enabled: ${STOCK_ALERTS_ENABLED:true}
+    check-delay-ms: ${STOCK_ALERTS_CHECK_DELAY_MS:3600000}
+    initial-delay-ms: ${STOCK_ALERTS_INITIAL_DELAY_MS:60000}
+    reminder-interval-minutes: ${STOCK_ALERTS_REMINDER_INTERVAL_MINUTES:10080}
+    retry-interval-minutes: ${STOCK_ALERTS_RETRY_INTERVAL_MINUTES:30}
+    max-attempts: ${STOCK_ALERTS_MAX_ATTEMPTS:3}

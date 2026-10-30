@@ -1,0 +1,15 @@
+CAMBIOS REALIZADOS - Menu (auditoria en respuestas)
+
+1) dto/response/MenuResponse.java
+- Aniadidos: Instant createdAt, Instant updatedAt, AuditUserDTO createdBy, AuditUserDTO updatedBy
+- Actualizado MenuResponse.from() para poblar auditoria
+
+2) dto/response/MenuDishResponse.java
+- Aniadidos: Instant createdAt, Instant updatedAt, AuditUserDTO createdBy, AuditUserDTO updatedBy
+- Actualizado MenuDishResponse.from() para poblar auditoria (mantiene addedBy/addedAt)
+
+3) controllers
+- MenuController: usa MenuService que mapea con MenuResponse.from(); sin cambios de logica
+
+Notas:
+- Menu y MenuDish heredan de AuditableEntity con @SQLRestriction(deleted=false).

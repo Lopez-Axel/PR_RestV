@@ -25,8 +25,17 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2'
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+	implementation 'com.google.zxing:core:3.5.3'
+	implementation 'com.google.zxing:javase:3.5.3'
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-database-postgresql'
+	implementation 'me.paulschwarz:spring-dotenv:4.0.0'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-actuator-test'
@@ -43,4 +52,21 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+// Inyecta las variables del .env de la raiz en el proceso de bootRun (Spring no lee .env nativamente)
+tasks.named('bootRun') {
+	def envFile = rootProject.file('.env')
+	if (envFile.exists()) {
+		envFile.eachLine { line ->
+			def matcher = line =~ /^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*)$/
+			if (matcher.matches()) {
+				def value = matcher.group(2).trim()
+				if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+					value = value.substring(1, value.length() - 1)
+				}
+				environment matcher.group(1), value
+			}
+		}
+	}
 }

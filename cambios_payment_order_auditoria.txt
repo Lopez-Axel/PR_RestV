@@ -1,0 +1,17 @@
+CAMBIOS REALIZADOS - Payment y Order (auditoria en respuestas)
+
+1) dto/response/PaymentResponse.java
+- Aniadidos: Instant createdAt, Instant updatedAt, AuditUserDTO createdBy, AuditUserDTO updatedBy
+- Actualizado PaymentResponse.from() para poblar auditoria
+
+2) dto/response/OrderResponse.java
+- Aniadidos: Instant createdAt, Instant updatedAt, AuditUserDTO createdBy, AuditUserDTO updatedBy
+- Actualizado OrderResponse.from() para poblar auditoria (y limpiados imports)
+
+3) controllers (revisados)
+- PaymentController: todos los endpoints de devolucion usan PaymentService que mapea con PaymentResponse.from() (get/POST/PATCH). No requiere cambios de logica.
+- OrderController: todos los endpoints usan OrderService mapeando con OrderResponse.from() / OrderDetailResponse. No requiere cambios de logica.
+
+Notas:
+- Entities Payment/Order ya heredan de AuditableEntity y tienen @SQLRestriction + deleted; auditoria ya disponible.
+- Se mantiene formato existente; solo se extienden DTOs.

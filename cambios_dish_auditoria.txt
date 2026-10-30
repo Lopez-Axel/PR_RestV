@@ -1,0 +1,21 @@
+CAMBIOS REALIZADOS - Dish (auditoria + listado completo)
+
+1) dto/response/DishDTO.java
+- Aniadidos: Instant createdAt, Instant updatedAt, AuditUserDTO createdBy, AuditUserDTO updatedBy
+- Actualizado DishDTO.from() para poblar auditoria
+
+2) dto/response/DishSummaryDTO.java
+- Aniadidos: Instant createdAt, Instant updatedAt, AuditUserDTO createdBy, AuditUserDTO updatedBy
+
+3) mapper/DishMapper.java
+- toResponse(WAITER/CHEF/ADMIN): ahora pasa createdAt/updatedAt/createdBy/updatedBy
+- toResponseWithAnalysis: ahora pasa createdAt/updatedAt/createdBy/updatedBy
+
+4) service/DishService.java
+- findAll: cambiado de dishRepository.findByAvailableTrue() a dishRepository.findAll() (devuelve todos los registros no borrados; el filtrado de deleted sigue en @SQLRestriction(deleted=false))
+- summary: aniadido paso de auditoria a DishSummaryDTO
+
+Notas:
+- findById sigue funcionando
+- El listado ya no filtra por available, solo por deleted (via @SQLRestriction)
+- Auditoria proviene de AuditableEntity con AuditConfig (AuditorAware)
